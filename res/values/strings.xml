@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="menu_start_service">Start Service</string>
+    <string name="status_update">Status Update</string>
+    <string name="app_name">Yamba</string>
+    <string name="button_update">Update!</string>
+    <string name="hint">Please enter your status update&#8230;</string>
+    <string name="menu_stop_service">Stop Service</string>
+    <string name="refresh_service">Refresh</string>
+    <string name="user_name">Username</string>
+    <string name="username_summary">Enter your username</string>
+    <string name="password">Password</string>
+    <string name="password_sumary">Enter your password</string>
+    <string name="server">Server API</string>
+    <string name="server_summary">Enter your server API root</string>
+    <string name="preferences">Preferences</string>
+    <string name="delay">Refresh Delay</string>
+    <string name="delay_summary">Enter how many seconds to wait before refresh</string>
+    <string-array name="delay_names">
+        <item >Every minute</item>
+        <item >Every five minutes</item>
+        <item >Every half hour</item>
+        <item >Every hour</item>
+    </string-array>
+	<string-array name="delay_values">
+	    <item>60</item>
+	    <item>300</item>
+	    <item>1800</item>
+	    <item>3600</item>
+	</string-array>
+	    <string name="timeline">Timeline</string>
+</resources>
