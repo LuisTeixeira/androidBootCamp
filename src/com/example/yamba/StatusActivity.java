@@ -2,6 +2,9 @@ package com.example.yamba;
 
 import winterwell.jtwitter.TwitterException;
 import android.app.Activity;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,32 +14,48 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class StatusActivity extends Activity implements OnClickListener{
-	
+public class StatusActivity extends Activity implements OnClickListener,LocationListener{
+	static final String TAG = "StatusActivity";
+	static final String PROVIDER = LocationManager.GPS_PROVIDER;
 	Button btnUpdate;
 	EditText editStatus;
+	LocationManager locationManager;
+	Location location;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		//Debug.startMethodTracing("Yamba.trace");
-		
+		super.onCreate(savedInstanceState);		
 		setContentView(R.layout.status);
 		
 		btnUpdate = (Button) findViewById(R.id.btnUpdate);
 		editStatus = (EditText) findViewById(R.id.editStatus);
 		
 		btnUpdate.setOnClickListener(this);
+		
+		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+		location = locationManager.getLastKnownLocation(PROVIDER);
 	}
 
 	
 	
 
 	@Override
+	protected void onPause() {
+		super.onPause();
+		locationManager.removeUpdates(this);
+	}
+
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		locationManager.requestLocationUpdates(PROVIDER, 30000, 1000, this);
+	}
+
+
+	@Override
 	protected void onStop(){
 		super.onStop();
-		
-		//Debug.stopMethodTracing();
 	}
 	
 	@Override
@@ -66,6 +85,33 @@ public class StatusActivity extends Activity implements OnClickListener{
 		}
 		
 		
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		this.location = location;
+		Log.d(TAG,"Location Changed"+location.toString());
+	}
+
+
+
+	/* Location Listener Callbacks*/
+	@Override
+	public void onProviderDisabled(String provider) {	
+	}
+
+
+
+
+	@Override
+	public void onProviderEnabled(String provider) {
+	}
+
+
+
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
 }
