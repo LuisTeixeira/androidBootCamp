@@ -19,7 +19,6 @@ public class YambaApp extends Application implements OnSharedPreferenceChangeLis
 	public static final String REFRESH_ALARM = "com.example.yamba.RefreshAlarm";
 	private Twitter twitter;
 	SharedPreferences prefs;
-	StatusData statusData;
 
 	@Override
 	public void onCreate() {
@@ -28,8 +27,6 @@ public class YambaApp extends Application implements OnSharedPreferenceChangeLis
 		// Prefs stuff
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
-		
-		statusData = new StatusData(this);
 		
 		Log.d(TAG, "Created!");
 	}
@@ -65,7 +62,7 @@ public class YambaApp extends Application implements OnSharedPreferenceChangeLis
 			List<Status> timeline = getTwitter().getPublicTimeline();
 			
 			for(Status s : timeline){
-				statusData.insert(s);
+				getContentResolver().insert(StatusProvider.CONTENT_URI, StatusProvider.statusToValues(s));
 				if(s.createdAt.getTime()>lastTimestampSeen){
 					count++;
 					biggestTimestampSeen = (s.createdAt.getTime()> biggestTimestampSeen)?s.createdAt.getTime():biggestTimestampSeen;

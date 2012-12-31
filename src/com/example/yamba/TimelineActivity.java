@@ -14,13 +14,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TimelineActivity extends ListActivity{
 	static final String TAG = "TimelineActivity";
-	static final String [] FROM = {StatusData.C_USER,StatusData.C_TEXT,StatusData.C_CREATED_AT};
+	static final String [] FROM = {StatusProvider.C_USER,StatusProvider.C_TEXT,StatusProvider.C_CREATED_AT};
 	static final int [] TO = {R.id.textUser,R.id.textText,R.id.textCreatedAt};
 	Cursor cursor;
 	SimpleCursorAdapter adapter; 
@@ -31,7 +31,7 @@ public class TimelineActivity extends ListActivity{
 		super.onCreate(savedInstanceState);
 		
 		setTitle(R.string.timeline);
-		cursor = ((YambaApp)getApplication()).statusData.query();
+		cursor = getContentResolver().query(StatusProvider.CONTENT_URI, null, null, null, StatusProvider.C_CREATED_AT + " DESC");
 		adapter = new SimpleCursorAdapter(this, R.layout.row, cursor, FROM, TO);
 		adapter.setViewBinder(VIEW_BINDER);
 		setListAdapter(adapter);
@@ -59,7 +59,7 @@ public class TimelineActivity extends ListActivity{
 			if(view.getId() != R.id.textCreatedAt)
 				return false;
 			
-			long time = cursor.getLong(cursor.getColumnIndex(StatusData.C_CREATED_AT));
+			long time = cursor.getLong(cursor.getColumnIndex(StatusProvider.C_CREATED_AT));
 			CharSequence text = DateUtils.getRelativeTimeSpanString(time);
 			((TextView) view).setText(text);
 			return true;
@@ -104,7 +104,7 @@ public class TimelineActivity extends ListActivity{
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			cursor = ((YambaApp)getApplication()).statusData.query();
+			cursor = getContentResolver().query(StatusProvider.CONTENT_URI, null, null, null, StatusProvider.C_CREATED_AT + " DESC");
 			adapter.changeCursor(cursor);
 			int count = intent.getIntExtra("count", 0);
 			String result = (count > 1) ? String.format("You have %d new tweets", count) : String.format("You have %d new tweet", count);
